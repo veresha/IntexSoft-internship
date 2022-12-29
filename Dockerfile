@@ -1,9 +1,11 @@
-FROM python:3.9-slim
+FROM python:3.9-slim AS base
 
 RUN apt-get update \
     && apt-get install gcc -y \
     && apt-get install libpq-dev -y \
     && apt-get clean
+
+FROM base AS app
 
 COPY . /usr/test_project
 

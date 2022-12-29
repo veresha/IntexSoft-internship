@@ -1,12 +1,13 @@
 from fastapi import FastAPI
+from .app.models import models
+from .app.routes.routes import router
+from .app.models.database import engine
+
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
-
+app.include_router(router, prefix="/items", tags=["item"])
 
 """
 main

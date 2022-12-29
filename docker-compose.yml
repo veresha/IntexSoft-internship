@@ -5,7 +5,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - .:/test_project
+      - .:/usr/test_project
     environment:
       DB_NAME: ${DB_NAME}
       HOST_ADDRESS: ${HOST_ADDRESS}
