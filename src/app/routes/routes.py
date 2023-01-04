@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 from fastapi import Depends
 from ..models.database import SessionLocal
 from sqlalchemy.orm import Session
