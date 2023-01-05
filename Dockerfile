@@ -8,10 +8,11 @@ RUN apt-get update \
 
 FROM base AS app
 
-COPY . /usr/test_project
-
 WORKDIR /usr/test_project
 
+COPY requirements.txt /usr/test_project/
 RUN pip install -r requirements.txt
 
-ENTRYPOINT ["uvicorn", "src.main:app", "--reload", "--host", "0.0.0.0", "--port", "8000"]
+COPY .env alembic.ini entrypoint-celery.sh entrypoint-server.sh /usr/test_project/
+
+COPY src /usr/test_project

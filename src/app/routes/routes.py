@@ -54,3 +54,9 @@ async def update_item(item_id: int, title: str, description: str, db: Session = 
 async def delete_item(item_id: int, db: Session = Depends(get_db)):
     crud.remove_item(db, item_id=item_id)
     return Response(status="Ok", code="200", message="Success delete data").dict(exclude_none=True)
+
+
+@router.delete("/buy")
+async def buy_item(db: Session = Depends(get_db)):
+    crud.buy_item(db)
+    return Response(status="Ok", code="200", message="Success bought").dict(exclude_none=True)

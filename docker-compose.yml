@@ -2,8 +2,19 @@ version: "3.8"
 services:
   server:
     build: .
+    entrypoint: ./entrypoint-server.sh
     ports:
       - "8000:8000"
+    volumes:
+      - .:/usr/test_project
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+  worker:
+    build: .
+    entrypoint: ./entrypoint-celery.sh
     volumes:
       - .:/usr/test_project
     env_file:
@@ -19,3 +30,11 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "5432:5432"
+
+  rabbitmq:
+    image: rabbitmq:3.9.0-management-alpine
+    environment:
+      RABBITMQ_BROKER: ${RABBITMQ_BROKER}
+    ports:
+      - "5672:5672"
+      - "15672:15672"

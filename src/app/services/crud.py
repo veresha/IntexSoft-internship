@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from ..models.models import Item
 from ..models.schemas import ItemSchema
+from ...celery_app.tasks.sync import send_request_to_warehouse
 
 
 def get_item(db: Session, skip: int = 0, limit: int = 100):
@@ -34,3 +35,11 @@ def update_item(db: Session, item_id: int, title: str, description: str):
     db.commit()
     db.refresh(_item)
     return _item
+
+
+def buy_item(db: Session):
+    # _item = get_item_by_id(db=db)
+    #
+    # _item_uuid = _item.uuid
+    result = send_request_to_warehouse.delay()
+    print(result.backend)
