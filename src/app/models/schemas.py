@@ -6,9 +6,10 @@ T = TypeVar('T')
 
 
 class ItemSchema(BaseModel):
-    id: Optional[int] = None
-    title: Optional[str] = None
+    id: int
+    name: str
     description: Optional[str] = None
+    uuid: int
 
     class Config:
         orm_mode = True

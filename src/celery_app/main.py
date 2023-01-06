@@ -9,7 +9,3 @@ app = Celery(
     include=['src.celery_app.tasks']
 )
 app.autodiscover_tasks()
-
-# celery_app.conf.imports = [
-#     'services.tasks',
-# ]

@@ -21,8 +21,9 @@ def get_db():
 async def add_items(db: Session = Depends(get_db)):
     item = ItemSchema()
     for i in range(10):
-        item.title = f'{i} item'
-        item.description = f'{i} description'
+        item.name = f'IPhone {i}'
+        item.description = f'IPhone {i} description'
+        item.uuid = 2323
         crud.create_item(db, item=item)
     return Response(status="Ok",
                     code="200",
@@ -44,9 +45,8 @@ async def get_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_d
 
 
 @router.patch("/update")
-async def update_item(item_id: int, title: str, description: str, db: Session = Depends(get_db)):
-    _item = crud.update_item(db, item_id=item_id,
-                             title=title, description=description)
+async def update_item(item_id: int, name: str, description: str, uuid: int, db: Session = Depends(get_db)):
+    _item = crud.update_item(db, item_id=item_id, name=name, description=description, uuid=uuid)
     return Response(status="Ok", code="200", message="Success update data", result=_item)
 
 
@@ -56,7 +56,8 @@ async def delete_item(item_id: int, db: Session = Depends(get_db)):
     return Response(status="Ok", code="200", message="Success delete data").dict(exclude_none=True)
 
 
-@router.delete("/buy")
-async def buy_item(db: Session = Depends(get_db)):
-    crud.buy_item(db)
-    return Response(status="Ok", code="200", message="Success bought").dict(exclude_none=True)
+@router.get("/buy/{item_id}")
+async def buy_item(item_id: int, quantity: int, db: Session = Depends(get_db)):
+    result = crud.buy_item(db, item_id=item_id, quantity=quantity)
+
+    return Response(status="Ok", code="200", message=str(result)).dict(exclude_none=True)
