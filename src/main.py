@@ -1,10 +1,5 @@
 from fastapi import FastAPI
-
-from .app.models import models
-from .app.models.database import engine
-from .app.routes.routes import router
-
-models.Base.metadata.create_all(bind=engine)
+from src.app.routes.routes import router
 
 app = FastAPI()
 

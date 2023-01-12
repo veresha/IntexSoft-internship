@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Query
 from fastapi import Depends
-from ..models.database import SessionLocal
+from src.app.models.database import SessionLocal
 from sqlalchemy.orm import Session
-from ..models.schemas import Response, RequestItem, ItemSchema
+from src.app.models.schemas import Response, RequestItem, ItemSchema
 
 from ..services import crud
 
@@ -24,15 +24,15 @@ async def add_items(db: Session = Depends(get_db)):
         item.name = f'IPhone {i}'
         item.description = f'IPhone {i} description'
         item.uuid = 2323
-        crud.create_item(db, item=item)
+        await create_item(db, item=item)
     return Response(status="Ok",
                     code="200",
-                    message="Item created successfully").dict(exclude_none=True)
+                    message="Items created successfully").dict(exclude_none=True)
 
 
 @router.post("/create")
-async def create_item_service(request: RequestItem, db: Session = Depends(get_db)):
-    crud.create_item(db, item=request.parameter)
+async def create_item(request: RequestItem, db: Session = Depends(get_db)):
+    await crud.create_item(db, item=request.parameter)
     return Response(status="Ok",
                     code="200",
                     message="Item created successfully").dict(exclude_none=True)
@@ -52,7 +52,7 @@ async def update_item(item_id: int, name: str, description: str, uuid: int, db: 
 
 @router.delete("/delete")
 async def delete_item(item_id: int, db: Session = Depends(get_db)):
-    crud.remove_item(db, item_id=item_id)
+    await crud.remove_item(db, item_id=item_id)
     return Response(status="Ok", code="200", message="Success delete data").dict(exclude_none=True)
 
 

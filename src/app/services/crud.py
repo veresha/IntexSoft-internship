@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
-from ..models.models import Item
-from ..models.schemas import ItemSchema
-from ...celery_app.main import app
-from ...celery_app.tasks.sync import send_request_to_warehouse
+from src.app.models.models import Item
+from src.app.models.schemas import ItemSchema
+from src.celery_app.main import app
+from src.celery_app.tasks.sync import send_request_to_warehouse
 
 
 def get_item(db: Session, skip: int = 0, limit: int = 100):
@@ -18,7 +18,6 @@ def create_item(db: Session, item: ItemSchema):
     db.add(_item)
     db.commit()
     db.refresh(_item)
-    return _item
 
 
 def remove_item(db: Session, item_id: int):
