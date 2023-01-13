@@ -1,16 +1,11 @@
 from sqlalchemy.orm import Session
 from src.app.models.models import Item
 from src.app.models.schemas import ItemSchema
-from src.celery_app.main import app
-from src.celery_app.tasks.sync import send_request_to_warehouse
+from src.app.services.db_worker import get_item_by_id
 
 
 def get_item(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Item).offset(skip).limit(limit).all()
-
-
-def get_item_by_id(db: Session, item_id: int):
-    return db.query(Item).filter(Item.id == item_id).first()
 
 
 def create_item(db: Session, item: ItemSchema):
@@ -36,15 +31,3 @@ def update_item(db: Session, item_id: int, name: str, description: str, uuid: in
     db.commit()
     db.refresh(_item)
     return _item
-
-
-def buy_item(db: Session, item_id: int, quantity: int):
-    _item = get_item_by_id(db=db, item_id=item_id)
-    _item_uuid = _item.uuid
-
-    result = app.send_task(
-        name="send_request_to_warehouse",
-        queue="warehouse_queue",
-        kwargs={"items": [{"id": _item_uuid, "quantity": quantity}]}
-    )
-    return result

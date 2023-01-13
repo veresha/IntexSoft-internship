@@ -13,6 +13,6 @@ WORKDIR /usr/test_project
 COPY requirements.txt /usr/test_project/
 RUN pip install -r requirements.txt
 
-COPY .env alembic.ini entrypoint-celery.sh entrypoint-server.sh /usr/test_project/
+COPY .env alembic.ini entrypoint-server.sh /usr/test_project/
 
 COPY src /usr/test_project
