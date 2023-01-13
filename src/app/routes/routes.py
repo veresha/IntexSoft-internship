@@ -52,5 +52,6 @@ async def delete_item(item_id: int, db: Session = Depends(get_db)):
 @router.get("/buy/{item_id}")
 async def buy_items(item_id: int, quantity: int, db: Session = Depends(get_db)):
     result = buy_item(db, item_id=item_id, quantity=quantity)
+    print(result)
 
     return Response(status="Ok", code="200", message=str(result)).dict(exclude_none=True)

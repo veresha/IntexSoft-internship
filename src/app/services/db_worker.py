@@ -22,12 +22,13 @@ def buy_item(db: Session, item_id: int, quantity: int):
     _item = get_item_by_id(db=db, item_id=item_id)
     _item_uuid = _item.uuid
 
-    # result = get_info.delay(item_uuid=_item_uuid, quantity=quantity)
-
+    print("Send task")
     result = app.send_task(
         name="get_info",
         queue="warehouse_queue",
         kwargs={"items": [{"id": _item_uuid, "quantity": quantity}]}
     )
     print("Answer received")
-    return result
+    print(result.backend)
+    print(result)
+    return result.result

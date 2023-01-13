@@ -2,6 +2,7 @@ version: "3.8"
 services:
   server:
     build: .
+    container_name: shop-server
     entrypoint: ./entrypoint-server.sh
     ports:
       - "8000:8000"
@@ -12,11 +13,28 @@ services:
     depends_on:
       - db
 
+  worker:
+    build: .
+    container_name: shop-worker
+    entrypoint: ./entrypoint-celery.sh
+    volumes:
+      - .:/usr/test_project
+    env_file:
+      - .env
+    depends_on:
+      - db
+
   db:
     image: postgres
+    container_name: shop-db
     environment:
       POSTGRES_DB: ${DATABASE}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "5432:5432"
+
+
+networks:
+  default:
+    name: external-example
